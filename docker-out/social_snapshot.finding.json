@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "agent_id": "playwright-youtube",
+  "source_role": "organic_social",
+  "period": null,
+  "as_of": "2026-03-28",
+  "headline": "No videos extracted from the channel page (layout or access may have blocked parsing).",
+  "metrics": [],
+  "recommendations": [
+    {
+      "title": "Validate selectors or try agent mode",
+      "rationale": "YouTube DOM changes, consent interstitials, or geo blocks can empty extraction; re-run with updated selectors or `social-youtube-worker --mode agent` if configured.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 50
+    }
+  ],
+  "evidence": [
+    "Source channel/list URL: https://www.youtube.com/@YouTube/videos"
+  ],
+  "confidence": 0.45,
+  "raw_notes": "Public page scrape only; not a substitute for platform APIs or authenticated analytics."
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "agent_id": "playwright-youtube-fixture",
+  "source_role": "organic_social",
+  "as_of": "2026-03-28",
+  "headline": "Sampled 2 public videos from the channel list; see per-video view metrics.",
+  "metrics": [
+    {
+      "name": "Sum of parsed video views (sample)",
+      "value": 12500000,
+      "unit": "views"
+    },
+    {
+      "name": "Video 1 views",
+      "value": 12000000,
+      "unit": "views"
+    },
+    {
+      "name": "Video 2 views",
+      "value": 500000,
+      "unit": "views"
+    }
+  ],
+  "recommendations": [],
+  "evidence": [
+    "Source channel/list URL: https://www.youtube.com/@ExampleBrand/videos",
+    "Example launch video — https://www.youtube.com/watch?v=dQw4w9WgXcQ — 12M views",
+    "Behind the scenes — https://www.youtube.com/watch?v=abc123 — 500K views"
+  ],
+  "confidence": 0.72,
+  "raw_notes": "Illustrative shape from workers.social_public; replace with live sandbox output for demos."
+}

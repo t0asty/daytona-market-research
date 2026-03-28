@@ -43,6 +43,23 @@ export OPENAI_API_KEY=...
 report-gen --inputs "examples/fixtures/*.json" --out report.md --llm
 ```
 
+### OpenAI keys: what works best with Daytona
+
+**Simplest reliable pattern (recommended):**
+
+1. **Sandboxes = no OpenAI.** Run the YouTube worker in **`--mode playwright`** only. Daytona never sees your API key.
+2. **Your laptop / CI = optional OpenAI.** Use **`report-gen --llm`** (or future local polish) with `OPENAI_API_KEY` in a **gitignored** `.env` or secret store—not in the repo, not in `.env.example`.
+
+That avoids “key leaked / blocked” noise from **cloud datacenter IPs** and from keys accidentally appearing in **logs, screenshots, or public repos**.
+
+**If you need an LLM inside a remote environment:**
+
+- **Azure OpenAI** (or another **server-oriented** API) is often smoother than a consumer `sk-...` key from arbitrary cloud IPs.
+- **Your own tiny proxy** (e.g. FastAPI on a host you control): the sandbox calls the proxy with a **short-lived token**; only the proxy holds `OPENAI_API_KEY`. Rotate if the token leaks, not the main key.
+- **Never** commit real keys; **rotate** any key that was ever committed or pasted into chat.
+
+There is no magic that maps **Daytona credits** to **OpenAI usage**—OpenAI bills tokens separately unless you use a bundled product from another vendor.
+
 ## JSON contract (`AgentFinding`)
 
 Each agent writes **one JSON object** per run. Teammates should validate against this shape (see [`report_gen/models.py`](report_gen/models.py), [`examples/fixtures/`](examples/fixtures/), and Jinja templates under [`report_gen/templates/`](report_gen/templates/)).
@@ -91,6 +108,150 @@ pytest
 
 Web API tests use FastAPI’s `TestClient` (included in the `dev` extra). Full PDF smoke test requires `playwright install chromium`.
 
-## Later: Daytona orchestrator
+## Daytona: YouTube public listing worker (browser + allowlist)
 
-When sandboxes produce `*.json` findings, point `report-gen --inputs` at that directory or pass multiple globs. If sandboxes run in Daytona Cloud, the mock API or collector they call must be on a **reachable URL** (not only `localhost`).
+This repo includes a **Playwright** worker that opens a **public** YouTube channel `/videos` URL, samples visible titles and view counts, and writes a single [`AgentFinding`](report_gen/models.py) JSON (`source_role: organic_social`). Optional **`browser-use`** mode uses an LLM-driven browser agent with the same JSON output contract when DOM scraping is too brittle.
+
+### “Agents” inside Daytona (expectations vs this repo)
+
+Daytona is positioned as a runtime for **AI agents**, but **agent** does not have to mean “LLM inside the sandbox.” In practice, an **agent worker** is often: **isolated sandbox → autonomous job → structured output**. That matches this worker: it runs **without an LLM** in default `--mode playwright`, still consumes **Daytona credits**, and still emits **`AgentFinding` JSON** for the report pipeline—so you are **using agents in Daytona** in the same sense as “one sandbox per channel job.”
+
+If reviewers specifically want a **language model in the loop** inside the sandbox, you can:
+
+- use **`--mode agent`** (browser-use) **only** once you have a **server-safe** model path (e.g. **Azure OpenAI**, or a **small proxy** that holds the provider key—not the raw key in sandbox env), or  
+- follow Daytona’s own **orchestrated agent** examples (e.g. **RLM + LiteLLM** in their docs), where the **LLM plans** and **code runs in sandboxes**—still your provider billing, not “Daytona credits for tokens.”
+
+Default **`playwright`** mode stays the best default when **OpenAI (or other) keys must not run from cloud sandboxes**.
+
+### Install
+
+```bash
+pip install -e ".[worker]"          # Playwright scraper
+playwright install chromium         # local runs outside Docker
+# Optional agent mode:
+pip install -e ".[browser-agent]"
+```
+
+### Run locally
+
+```bash
+social-youtube-worker \
+  --channel-url "https://www.youtube.com/@YouTube/videos" \
+  --max-items 10 \
+  -o /tmp/social_snapshot.finding.json
+# Optional: LLM + browser-use (needs OPENAI_API_KEY)
+social-youtube-worker --mode agent --channel-url "https://www.youtube.com/@YouTube/videos" -o /tmp/out.json
+```
+
+### Daytona: get code with **git** (simplest default)
+
+If you are **not** using a pre-built snapshot, cloning this repo in the sandbox is usually easier than uploading a zip.
+
+1. **`create_sandbox`** with outbound access to **Git** and **PyPI** (either leave allowlist open for the first run, or include domains such as `github.com, codeload.github.com, objects.githubusercontent.com, raw.githubusercontent.com, pypi.org, files.pythonhosted.org`). Add YouTube-related hosts when you run the scraper (see [Network allowlist](#network-allowlist-daytona-create_sandbox)). Playwright’s browser download may need extra hosts (e.g. `playwright.azureedge.net`, `storage.googleapis.com`) unless Chromium is already in the image.
+
+2. **Clone** (pick one):
+
+   - **MCP** `git_clone` with `url` + sandbox `id`, e.g. clone into `/tmp`; or  
+   - **`execute_command`**:  
+     `cd /tmp && git clone --depth 1 https://github.com/t0asty/daytona-market-research.git`
+
+   Use **your fork’s URL** if you work from a fork. **Private repos:** configure Daytona/Git credentials for the sandbox (PAT, deploy key, or org integration)—plain `https://github.com/org/private.git` without auth will fail with a username/password prompt.
+
+3. **Install and run** (vanilla Python image) — **recommended one-shot** (Playwright agent, no LLM):
+
+   ```bash
+   cd /tmp/daytona-market-research
+   bash scripts/daytona_social_youtube_worker.sh
+   ```
+
+   Override defaults with env vars:
+
+   ```bash
+   cd /tmp/daytona-market-research
+   CHANNEL_URL="https://www.youtube.com/@YourBrand/videos" MAX_ITEMS=5 \
+     bash scripts/daytona_social_youtube_worker.sh
+   ```
+
+   Equivalent manual steps: `pip install -e ".[worker]"`, `playwright install chromium`, `python -m workers.social_public.cli ...` (see [`scripts/daytona_social_youtube_worker.sh`](scripts/daytona_social_youtube_worker.sh)).
+
+4. **Pull the artifact** with MCP `file_download` (`filePath`: `/tmp/social_snapshot.finding.json` or your `OUTPUT`), then **`daytona-merge-report`** or **`report-gen`** on your machine.
+
+For repeat runs, switch to a **[snapshot](#snapshot-image-daytona)** so you skip `pip` / `playwright install` every time.
+
+### Snapshot image (Daytona)
+
+**What you usually want:** the Dockerfile defines the **environment Daytona boots into** (a **snapshot**), not something you run *nested* inside an already-running sandbox.
+
+1. **Local Docker (your machine)** — build and test, or push/tag for a registry if your Daytona setup pulls from there:
+
+   ```bash
+   docker build -f workers/social_public/Dockerfile -t daytona-social-youtube .
+   ```
+
+2. **Daytona snapshot (recommended for workers)** — register this Dockerfile as a snapshot in Daytona (dashboard or `daytona` CLI, depending on your org). Create sandboxes with that **snapshot** so Chromium + deps are already present; then you only **`execute_command`** the Python entrypoint (no `git clone` / `pip install` / `playwright install` on every run).
+
+3. **Docker *inside* the sandbox** — only works if your Daytona **workspace template** actually provides a Docker daemon (Docker-in-Docker or a mounted socket). Most default sandboxes **do not**; `docker build` there will fail with “Cannot connect to the Docker daemon”. If yours does support it, you could `git clone` / upload the repo and run `docker build` + `docker run` like on any Linux VM—but that is heavier and rarer than using a prebuilt snapshot.
+
+4. **API note** — Daytona’s `create_sandbox` can carry **`buildInfo.dockerfileContent`** (and context) so the **platform** builds the image when creating the sandbox; that is still “Daytona runs Docker,” not your process running Docker inside the guest.
+
+**After the environment is ready** (snapshot or install), run:
+
+```bash
+python -m workers.social_public.cli \
+  --channel-url "https://www.youtube.com/@YourBrand/videos" \
+  -o /tmp/social_snapshot.finding.json
+```
+
+**Environment variables**
+
+| Variable | When |
+|----------|------|
+| `OPENAI_API_KEY` | Required for `--mode agent` (ChatOpenAI + browser-use). |
+| `OPENAI_MODEL` | Optional; default `gpt-4o-mini` for agent mode. |
+
+### Network allowlist (Daytona `create_sandbox`)
+
+Restrict egress with `networkAllowList` (comma-separated). YouTube listings typically touch domains such as:
+
+`youtube.com, www.youtube.com, ytimg.com, ggpht.com, googlevideo.com, google.com`
+
+Tune using your browser’s Network tab on a successful load; consent flows may call **google.com**. Thumbnails and streams often use **ytimg.com** / **googlevideo.com**.
+
+### Handoff: pull JSON from sandbox → merged report
+
+Preferred v1 path uses **MCP `file_download`** (or any copy of `/tmp/social_snapshot.finding.json`)—no public ingest URL required. Then merge with existing fixtures:
+
+```bash
+daytona-merge-report /path/to/social_snapshot.finding.json \
+  --fixtures-glob "examples/fixtures/*.json" \
+  --out report.md
+```
+
+Equivalent manual step:
+
+```bash
+report-gen --inputs "examples/fixtures/*.json" /path/to/social_snapshot.finding.json --out report.md
+```
+
+**HTTP push** remains an option later: a small FastAPI ingest on a **public URL** can accept POSTed JSON if you outgrow file download.
+
+### Credits and lifecycle (~budget hygiene)
+
+Sandboxes cost while they run. Defaults to keep in mind when calling Daytona:
+
+- Use a **snapshot** with Chromium preinstalled (this Dockerfile) instead of reinstalling on every run.
+- Set **`autoStopInterval`** / **`autoDeleteInterval`** appropriately; **`destroy_sandbox`** after you have downloaded the finding so nothing idles.
+- **Agent mode** also consumes **LLM** tokens; shorter Playwright runs are cheaper on both dimensions.
+
+### Sample finding
+
+See [`examples/fixtures/organic_social_youtube.finding.json`](examples/fixtures/organic_social_youtube.finding.json) for the expected JSON shape (illustrative numbers).
+
+### Tests
+
+```bash
+pip install -e ".[dev,worker]"
+pytest
+# Optional live YouTube smoke (network + Chromium):
+RUN_YOUTUBE_INTEGRATION=1 pytest tests/test_social_worker.py -m integration
+```
