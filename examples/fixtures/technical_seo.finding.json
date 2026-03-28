@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "source_role": "technical_seo",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Technical SEO score: 71% (5/7 checks passed); structured data and canonical tags need attention.",
+  "metrics": [
+    { "name": "Technical SEO score", "value": 71, "unit": "%" },
+    { "name": "Checks passed", "value": 5 },
+    { "name": "Checks failed", "value": 2 },
+    { "name": "Page load time", "value": 2.3, "unit": "s" }
+  ],
+  "recommendations": [
+    {
+      "title": "Add Organization and WebSite schema markup",
+      "rationale": "No JSON-LD structured data found on homepage. Competitors all have Organization schema, enabling rich results in SERPs.",
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 78
+    },
+    {
+      "title": "Add self-referencing canonical tags",
+      "rationale": "Homepage lacks canonical tag, risking duplicate content issues with URL parameters and trailing slashes.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 70
+    }
+  ],
+  "evidence": [
+    "robots.txt: pass — found with sitemap reference.",
+    "sitemap.xml: pass — 45 entries.",
+    "HTTPS: pass — HTTP redirects correctly.",
+    "Page speed: pass — 2.3s load time.",
+    "Structured data: FAIL — no JSON-LD.",
+    "Mobile viewport: pass.",
+    "Canonical tag: FAIL — missing on homepage."
+  ],
+  "confidence": 0.82
+}

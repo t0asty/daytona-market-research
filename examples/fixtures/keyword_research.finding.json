@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "source_role": "keyword_research",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Discovered 42 keywords in 8 clusters; transactional intent dominates competitive terms.",
+  "metrics": [
+    { "name": "Keywords discovered", "value": 42 },
+    { "name": "Keyword clusters", "value": 8 },
+    { "name": "Informational intent", "value": 15, "unit": "keywords" },
+    { "name": "Transactional intent", "value": 18, "unit": "keywords" },
+    { "name": "Commercial intent", "value": 9, "unit": "keywords" }
+  ],
+  "recommendations": [
+    {
+      "title": "Target 'best seo tools' keyword cluster (12 keywords)",
+      "rationale": "Highest-volume cluster with clear commercial intent. Competitors rank for 8 of 12 terms. Creating a comparison page could capture significant traffic.",
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 85
+    },
+    {
+      "title": "Create FAQ content for informational queries",
+      "rationale": "15 informational keywords map to common questions. Structured FAQ pages can capture featured snippets and People Also Ask boxes.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 65
+    }
+  ],
+  "evidence": [
+    "Google Suggest API: 5 seed keywords expanded to 42 unique terms.",
+    "Intent distribution: transactional (43%), informational (36%), commercial (21%).",
+    "Top cluster: 'best seo tools' (12 keywords)."
+  ],
+  "confidence": 0.72
+}

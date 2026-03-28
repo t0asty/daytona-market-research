@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "source_role": "serp_analysis",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Analyzed 20 SERPs; 5 easy-win positions (rank 4-10) and 8 featured snippet opportunities.",
+  "metrics": [
+    { "name": "SERPs analyzed", "value": 20 },
+    { "name": "Featured snippet opportunities", "value": 8 },
+    { "name": "PAA questions found", "value": 34 },
+    { "name": "Easy wins (position 4-10)", "value": 5 },
+    { "name": "Avg domain position", "value": 7.2 }
+  ],
+  "recommendations": [
+    {
+      "title": "Push 5 keywords from page 1 bottom to top 3",
+      "rationale": "Currently ranking 4-10 for high-value terms. Content refresh and internal linking can push these into the top 3, estimated +40% click-through rate.",
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 88
+    },
+    {
+      "title": "Target featured snippets for 8 keywords",
+      "rationale": "Keywords without existing featured snippets present position-0 opportunities. Create structured content (lists, tables, definitions) to capture.",
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 80
+    }
+  ],
+  "evidence": [
+    "SERP features: featured_snippet (12), people_also_ask (18), video (4), knowledge_panel (3).",
+    "Domain appears in 14 of 20 SERPs analyzed.",
+    "Top PAA: 'how to improve seo rankings', 'what are the best seo tools'."
+  ],
+  "confidence": 0.68
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source_role": "content_audit",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Audited 15 pages; 9 have SEO issues — thin content and missing meta descriptions dominate.",
+  "metrics": [
+    { "name": "Pages audited", "value": 15 },
+    { "name": "Pages with issues", "value": 9 },
+    { "name": "Avg word count", "value": 620 },
+    { "name": "Total issues found", "value": 14 }
+  ],
+  "recommendations": [
+    {
+      "title": "Add meta descriptions to 6 pages",
+      "rationale": "Missing meta descriptions reduce click-through rates from SERPs. Each description should be 120-160 characters with target keyword included.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 72
+    },
+    {
+      "title": "Expand thin content on 4 pages (under 300 words)",
+      "rationale": "Pages with fewer than 300 words struggle to rank. Aim for 800+ words on key landing pages with proper heading structure.",
+      "impact_estimate": "high",
+      "effort": "high",
+      "priority": 60
+    }
+  ],
+  "evidence": [
+    "Issue breakdown: missing_meta_description (6), thin_content (4), images_without_alt (3), missing_h1 (1).",
+    "Pages from sitemap: 15.",
+    "Content ranges from 89 to 2,100 words."
+  ],
+  "confidence": 0.76
+}
