@@ -9,6 +9,7 @@ import pytest
 from report_gen.models import AgentFinding
 from workers.social_public.browser_use_runner import _extract_json_object
 from workers.social_public.finding import build_organic_social_finding
+from workers.social_public.mock_youtube import mock_youtube_finding
 
 
 def test_build_organic_social_finding_sums_views() -> None:
@@ -49,6 +50,15 @@ def test_organic_social_youtube_fixture_validates() -> None:
 def test_extract_json_object() -> None:
     assert _extract_json_object('{"videos":[]}') == {"videos": []}
     assert _extract_json_object('prefix {"a": 1} suffix') == {"a": 1}
+
+
+def test_mock_youtube_finding_validates() -> None:
+    f = mock_youtube_finding("https://www.youtube.com/@AcmeBrand/videos", max_items=3)
+    AgentFinding.model_validate(f.model_dump(mode="json"))
+    assert f.agent_id == "mock-youtube"
+    assert f.confidence <= 0.3
+    assert "MOCK" in f.headline.upper()
+    assert any("MOCK DATA" in e.upper() for e in f.evidence)
 
 
 def test_daytona_merge_report_cli(tmp_path: Path) -> None:

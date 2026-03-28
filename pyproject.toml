@@ -35,9 +35,11 @@ report-gen = "report_gen.cli:main"
 serve-report-ui = "report_gen.web.__main__:main"
 social-youtube-worker = "workers.social_public.cli:main"
 daytona-merge-report = "workers.social_public.handoff:main"
+mock-saas-findings = "workers.mock_agents.cli:main"
+marketing-orchestrator = "orchestrator.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["report_gen", "workers"]
+packages = ["report_gen", "workers", "orchestrator"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -143,6 +143,47 @@ social-youtube-worker \
 social-youtube-worker --mode agent --channel-url "https://www.youtube.com/@YouTube/videos" -o /tmp/out.json
 ```
 
+**Mock YouTube (no network to youtube.com)** — demos or strict egress tiers:
+
+```bash
+social-youtube-worker --mock --channel-url "https://www.youtube.com/@YourBrand/videos" --max-items 5 -o /tmp/social_snapshot.finding.json
+# or: export SOCIAL_YOUTUBE_MOCK=1
+```
+
+Synthetic output: `agent_id: mock-youtube`, low `confidence`, “MOCK” in headline/evidence.
+
+### Mock B2B SaaS marketing agents (YC-style)
+
+Three extra **`AgentFinding`** generators for paid search, organic SEO, and PLG funnel—no live APIs:
+
+```bash
+mock-saas-findings --role paid_search --company "YourStartup" -o /tmp/mock_paid_search.finding.json
+mock-saas-findings --role organic_search --company "YourStartup" -o /tmp/mock_organic.finding.json
+mock-saas-findings --role funnel --company "YourStartup" -o /tmp/mock_funnel.finding.json
+# all three → ./mock_<role>.finding.json
+mock-saas-findings --role all --company "YourStartup" --out-dir ./mock_findings
+```
+
+Merge into a report with `report-gen --inputs "mock_findings/*.json" "examples/fixtures/*.json" --out report.md`.
+
+### Modular marketing orchestrator (sandbox-safe mocks)
+
+One **agent id** per channel (YouTube, Google Ads, organic search, PLG funnel, Google Maps, LinkedIn, Meta Ads Library, G2/Capterra-style reviews). Implementations are **mock-only** so Daytona sandboxes without reliable outbound access still produce valid [`AgentFinding`](report_gen/models.py) JSON.
+
+- **CLI:** `marketing-orchestrator list`, `run <id>`, `run-all`, `run-remote [agent_id|all]`
+- **Programmatic:** `from orchestrator import ResearchContext, run_registered`
+- **Daytona automation** uses the **Daytona Python SDK** (same idea as `report_gen/daytona_runner.py`), not Cursor’s Daytona MCP. Install `pip install -e ".[daytona]"`, set `DAYTONA_API_KEY`. Snapshot: `MARKETING_SNAPSHOT_NAME`, or fallback `SEO_SNAPSHOT_NAME`, then `seo-agent-v1`. The remote runner **uploads a minimal Python tree** (no `git clone`); it runs `pip install pydantic` inside the sandbox—pre-install `pydantic` in your snapshot if `pip` is blocked.
+
+```bash
+marketing-orchestrator list
+marketing-orchestrator run youtube --company "Acme" --stdout-json
+marketing-orchestrator run-all --company "Acme" --out-dir ./marketing_findings
+marketing-orchestrator run-remote youtube --company "Acme" -o ./remote_youtube.finding.json
+marketing-orchestrator run-remote all --company "Acme" --output-dir ./remote_findings
+```
+
+Feed merged inputs to `report-gen` as usual.
+
 ### Daytona: get code with **git** (simplest default)
 
 If you are **not** using a pre-built snapshot, cloning this repo in the sandbox is usually easier than uploading a zip.
@@ -157,22 +198,32 @@ If you are **not** using a pre-built snapshot, cloning this repo in the sandbox 
 
    Use **your fork’s URL** if you work from a fork. **Private repos:** configure Daytona/Git credentials for the sandbox (PAT, deploy key, or org integration)—plain `https://github.com/org/private.git` without auth will fail with a username/password prompt.
 
-3. **Install and run** (vanilla Python image) — **recommended one-shot** (Playwright agent, no LLM):
+3. **Install and run** (vanilla Python image):
+
+   **Restricted tier (no YouTube / limited internet):** mock only; needs Git + PyPI for `pip install -e .` (no Playwright download):
+
+   ```bash
+   cd /tmp/daytona-market-research
+   MOCK=1 bash scripts/daytona_social_youtube_worker.sh
+   ```
+
+   **Full scrape** (Playwright, no LLM):
 
    ```bash
    cd /tmp/daytona-market-research
    bash scripts/daytona_social_youtube_worker.sh
    ```
 
-   Override defaults with env vars:
+   Overrides:
 
    ```bash
    cd /tmp/daytona-market-research
-   CHANNEL_URL="https://www.youtube.com/@YourBrand/videos" MAX_ITEMS=5 \
+   CHANNEL_URL="https://www.youtube.com/@YourBrand/videos" MAX_ITEMS=5 MOCK=1 \
      bash scripts/daytona_social_youtube_worker.sh
    ```
 
-   Equivalent manual steps: `pip install -e ".[worker]"`, `playwright install chromium`, `python -m workers.social_public.cli ...` (see [`scripts/daytona_social_youtube_worker.sh`](scripts/daytona_social_youtube_worker.sh)).
+   See [`scripts/daytona_social_youtube_worker.sh`](scripts/daytona_social_youtube_worker.sh). **Mock SaaS agents** in-sandbox (after `pip install -e .`):  
+   `python -m workers.mock_agents.cli --role all --company YourStartup --out-dir /tmp/mock_findings`
 
 4. **Pull the artifact** with MCP `file_download` (`filePath`: `/tmp/social_snapshot.finding.json` or your `OUTPUT`), then **`daytona-merge-report`** or **`report-gen`** on your machine.
 

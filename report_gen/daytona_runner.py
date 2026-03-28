@@ -40,11 +40,9 @@ def is_daytona_available() -> bool:
     """Check if Daytona SDK is installed and API key is configured."""
     if not os.environ.get("DAYTONA_API_KEY"):
         return False
-    try:
-        import daytona  # noqa: F401
-        return True
-    except ImportError:
-        return False
+    from report_gen.daytona_imports import sdk_installed
+
+    return sdk_installed()
 
 
 def _get_seo_config() -> dict[str, Any]:
@@ -75,7 +73,11 @@ async def _run_stage(
 
     Returns the AgentFinding dict on success, None on failure.
     """
-    from daytona import CreateSandboxFromSnapshotParams, FileUpload
+    from report_gen.daytona_imports import load_daytona
+
+    d = load_daytona()
+    CreateSandboxFromSnapshotParams = d.CreateSandboxFromSnapshotParams
+    FileUpload = d.FileUpload
 
     script_path = _SCRIPTS_DIR / f"{stage_name}.py"
     common_path = _SCRIPTS_DIR / "common.py"
@@ -188,7 +190,11 @@ async def run_daytona_agents(fixtures_dir: Path) -> AsyncIterator[dict]:
       {"type": "report_ready"}
       {"type": "error", "message": "..."}
     """
-    from daytona import Daytona, DaytonaConfig
+    from report_gen.daytona_imports import load_daytona
+
+    d = load_daytona()
+    Daytona = d.Daytona
+    DaytonaConfig = d.DaytonaConfig
 
     config = _get_seo_config()
 

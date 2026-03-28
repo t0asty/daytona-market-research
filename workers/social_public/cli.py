@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -43,9 +44,23 @@ def main() -> None:
         action="store_true",
         help="Also print JSON to stdout.",
     )
+    parser.add_argument(
+        "--mock",
+        action="store_true",
+        help="Emit synthetic video metrics (no network). Also on if SOCIAL_YOUTUBE_MOCK=1/true.",
+    )
     args = parser.parse_args()
 
-    if args.mode == "playwright":
+    mock = args.mock or os.environ.get("SOCIAL_YOUTUBE_MOCK", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    if mock:
+        from workers.social_public.mock_youtube import mock_youtube_finding
+
+        finding = mock_youtube_finding(args.channel_url, max_items=args.max_items)
+    elif args.mode == "playwright":
         scraped = scrape_youtube_video_rows(
             args.channel_url,
             max_items=args.max_items,

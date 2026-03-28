@@ -23,13 +23,14 @@ async def create_seo_snapshot(
     Pre-installs web scraping libraries so sandbox creation is fast.
     Resources are minimal (cpu=1, memory=2) since SEO scripts are I/O-bound.
     """
-    from daytona import (
-        CreateSnapshotParams,
-        Daytona,
-        DaytonaConfig,
-        Image,
-        Resources,
-    )
+    from report_gen.daytona_imports import load_daytona
+
+    d = load_daytona()
+    CreateSnapshotParams = d.CreateSnapshotParams
+    Daytona = d.Daytona
+    DaytonaConfig = d.DaytonaConfig
+    Image = d.Image
+    Resources = d.Resources
 
     snapshot_name = snapshot_name or os.environ.get("SEO_SNAPSHOT_NAME", "seo-agent-v1")
 
