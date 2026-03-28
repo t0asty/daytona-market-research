@@ -1,0 +1,37 @@
+## Findings by channel
+
+{% for f in merged.findings %}
+### {{ f.source_role }}{% if f.period %} — _{{ f.period }}_{% endif %}{% if f.as_of %} · _as of {{ f.as_of }}_{% endif %}
+
+{{ f.headline }}
+
+{% if f.metrics %}
+| Metric | Value | Δ | Benchmark |
+|--------|-------|---|-----------|
+{% for m in f.metrics %}
+| {{ m.name }} | {{ m.value }} | {{ m.delta if m.delta is not none else "—" }} | {{ m.benchmark if m.benchmark else "—" }} |
+{% endfor %}
+
+{% endif %}
+{% if f.evidence %}
+**Evidence**
+
+{% for e in f.evidence %}
+- {{ e }}
+{% endfor %}
+
+{% endif %}
+{% if f.raw_notes %}
+
+<details>
+<summary>Agent notes (for traceability)</summary>
+
+{{ f.raw_notes }}
+
+</details>
+
+{% endif %}
+
+---
+
+{% endfor %}

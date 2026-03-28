@@ -1,0 +1,9 @@
+## Executive summary
+
+{% if executive_summary_md %}
+{{ executive_summary_md }}
+{% else %}
+{% for line in merged.executive_bullets %}
+- {{ line }}
+{% endfor %}
+{% endif %}

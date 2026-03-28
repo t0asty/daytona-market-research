@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "source_role": "paid_search",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Search captures high-intent demand; impression share losses on core brand terms need budget or bid attention.",
+  "metrics": [
+    {
+      "name": "Spend",
+      "value": 74200,
+      "unit": "USD",
+      "delta": 0.02
+    },
+    {
+      "name": "Impression share (brand core)",
+      "value": 72,
+      "unit": "%",
+      "delta": -5
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Defend core brand terms before competitor conquest ramps",
+      "rationale": "IS dropped 5pts while CPC on generics rose; brand terms still highest ROAS.",
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 85
+    },
+    {
+      "title": "refresh top-fatigued creatives in retargeting",
+      "rationale": "Duplicate hygiene check: different channel but same theme as social — merge test.",
+      "impact_estimate": "low",
+      "effort": "high",
+      "priority": 20
+    }
+  ],
+  "evidence": [
+    "Search query report: +18% brand term volume WoW."
+  ],
+  "confidence": 0.77
+}

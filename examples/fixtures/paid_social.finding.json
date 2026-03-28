@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "agent_id": "agent-ps-1",
+  "source_role": "paid_social",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "Social spend is efficient on prospecting but retargeting CPMs are creeping up week over week.",
+  "metrics": [
+    {
+      "name": "Spend",
+      "value": 128400,
+      "unit": "USD",
+      "delta": 0.06
+    },
+    {
+      "name": "Blended CTR",
+      "value": 1.12,
+      "unit": "%",
+      "delta": -0.08,
+      "benchmark": "1.2% target"
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Refresh top-fatigued creatives in retargeting",
+      "rationale": "Three static assets account for 45% of impressions and show a 19% drop in CTR vs account average.",
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 80
+    },
+    {
+      "title": "Re-allocate 10% budget to best-performing prospecting ad sets",
+      "rationale": "Two ad sets beat CPA target by 14% with room to scale.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 65
+    }
+  ],
+  "evidence": [
+    "Retargeting CPM +11% WoW while prospecting CPM flat.",
+    "Creative report: top 3 assets 42 days old."
+  ],
+  "confidence": 0.82,
+  "raw_notes": "Assume last-click attribution in mock data; incrementality not modeled."
+}

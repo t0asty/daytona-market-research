@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "daytona-market-research"
+version = "0.1.0"
+description = "Merge agent marketing findings into a markdown report"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.5",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+llm = ["openai>=1.30"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+report-gen = "report_gen.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["report_gen"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

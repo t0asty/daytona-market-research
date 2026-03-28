@@ -1,0 +1,12 @@
+## Cross-channel metrics (by role)
+
+{% for row in merged.metric_rollup %}
+### {{ row.name }}{% if row.unit %} ({{ row.unit }}){% endif %}
+
+| Role | Value | Δ |
+|------|-------|---|
+{% for role, val in row.by_role.items() %}
+| `{{ role }}` | {{ val }} | {{ row.delta_by_role.get(role, "—") }} |
+{% endfor %}
+
+{% endfor %}

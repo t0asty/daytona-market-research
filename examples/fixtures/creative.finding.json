@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "source_role": "creative",
+  "period": "2026-Q1",
+  "headline": "Concept B wins on consideration metrics; long-run hero assets need a rotation schedule.",
+  "metrics": [
+    {
+      "name": "Lift in consideration (test vs holdout)",
+      "value": 9,
+      "unit": "pts",
+      "delta": null
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Scale concept B into always-on with guardrails",
+      "rationale": "Lift significant in two geos; watch frequency caps to avoid saturation.",
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 55
+    }
+  ],
+  "evidence": [
+    "Geo holdout test n=4 regions, 6-week read."
+  ],
+  "confidence": 0.68
+}

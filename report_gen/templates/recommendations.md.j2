@@ -1,0 +1,18 @@
+## Prioritized recommendations
+
+{% for r in merged.merged_recommendations %}
+### {{ loop.index }}. {{ r.title }}
+
+_Sources:_ {{ r.sources | join(", ") }} · _confidence (max across agents):_ {{ r.source_confidence | round(2) }}
+
+{% if r.impact_estimate or r.effort or r.priority is not none %}
+{% if r.impact_estimate %}**Impact:** {{ r.impact_estimate }}{% endif %}{% if r.effort %} · **Effort:** {{ r.effort }}{% endif %}{% if r.priority is not none %} · **Priority:** {{ r.priority }}{% endif %}
+
+{% endif %}
+{{ r.rationale }}
+
+{% if r.see_also %}
+_Related titles from agents:_ {{ r.see_also | join("; ") }}
+
+{% endif %}
+{% endfor %}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "source_role": "funnel",
+  "period": "2026-Q1",
+  "headline": "Checkout step shows the largest drop-off; mobile landing LCP regressed on two key templates.",
+  "metrics": [
+    {
+      "name": "Checkout completion rate",
+      "value": 41,
+      "unit": "%",
+      "delta": -2.1
+    },
+    {
+      "name": "Mobile LCP (p75)",
+      "value": 3.8,
+      "unit": "s",
+      "delta": 0.4
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Simplify checkout step validation on mobile",
+      "rationale": "62% of exits occur on payment details with validation errors disproportionately on mobile Safari.",
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 78
+    }
+  ],
+  "evidence": [
+    "Funnel visualization: step 3 → 4 largest relative loss."
+  ],
+  "confidence": 0.71
+}
