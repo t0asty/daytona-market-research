@@ -1,7 +1,7 @@
-## Findings by channel
+## Part 5 — Findings by channel (evidence & tables)
 
 {% for f in merged.findings %}
-### {{ f.source_role }}{% if f.period %} — _{{ f.period }}_{% endif %}{% if f.as_of %} · _as of {{ f.as_of }}_{% endif %}
+### {{ f.source_role | humanize_role }}{% if f.period %} — _{{ f.period }}_{% endif %}{% if f.as_of %} · _as of {{ f.as_of }}_{% endif %}
 
 {{ f.headline }}
 

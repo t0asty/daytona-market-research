@@ -15,10 +15,17 @@ dependencies = [
 
 [project.optional-dependencies]
 llm = ["openai>=1.30"]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "fastapi>=0.115", "httpx>=0.27"]
+web = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "markdown>=3.7",
+    "playwright>=1.49",
+]
 
 [project.scripts]
 report-gen = "report_gen.cli:main"
+serve-report-ui = "report_gen.web.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["report_gen"]

@@ -1,0 +1,12 @@
+## Appendix — Traceability notes
+
+{% for f in merged.findings if f.raw_notes %}
+### {{ f.source_role | humanize_role }}{% if f.agent_id %} · _{{ f.agent_id }}_{% endif %}
+
+{{ f.raw_notes }}
+
+{% else %}
+{% if merged.findings %}
+_No additional agent notes beyond those folded into Part 5._
+{% endif %}
+{% endfor %}

@@ -2,7 +2,31 @@
 
 Merge structured **agent findings** (JSON) into a single **marketing performance** Markdown report. Built for a split hackathon track: channel agents (e.g. in Daytona sandboxes) emit JSON; this repo merges and renders the report.
 
-## Quick start
+## Executive console (UI)
+
+Browser UI: run **fixture-backed analyst agents** with one click, watch per-agent progress, read the merged report with styled markdown, and **download a PDF**.
+
+```bash
+# Terminal A — API (port 8000)
+pip install -e ".[web]"
+playwright install chromium
+serve-report-ui
+# or: python -m report_gen.web
+
+# Terminal B — Vite dev server (proxies /api → 8000)
+cd frontend && npm install && npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173). **If you only open the API port (e.g. 8000):** with no built UI you’ll get a short HTML page at `/` explaining next steps; after `npm run build`, **`/` auto-serves `frontend/dist`** (no env var required when that folder exists). Override with `UI_STATIC_DIR` if needed.
+
+```bash
+cd frontend && npm install && npm run build
+serve-report-ui   # then open http://127.0.0.1:8000/
+```
+
+Set `FINDINGS_FIXTURES_DIR` if your JSON findings live outside the repo default (`examples/fixtures`).
+
+## Quick start (CLI)
 
 ```bash
 python -m venv .venv
@@ -64,6 +88,8 @@ Path("out.md").write_text(md)
 pip install -e ".[dev]"
 pytest
 ```
+
+Web API tests use FastAPI’s `TestClient` (included in the `dev` extra). Full PDF smoke test requires `playwright install chromium`.
 
 ## Later: Daytona orchestrator
 

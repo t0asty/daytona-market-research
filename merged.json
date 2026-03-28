@@ -1,0 +1,297 @@
+{
+  "findings": [
+    {
+      "schema_version": 1,
+      "agent_id": null,
+      "source_role": "creative",
+      "period": "2026-Q1",
+      "as_of": null,
+      "headline": "Concept B wins on consideration metrics; long-run hero assets need a rotation schedule.",
+      "metrics": [
+        {
+          "name": "Lift in consideration (test vs holdout)",
+          "value": 9,
+          "unit": "pts",
+          "delta": null,
+          "benchmark": null
+        }
+      ],
+      "recommendations": [
+        {
+          "title": "Scale concept B into always-on with guardrails",
+          "rationale": "Lift significant in two geos; watch frequency caps to avoid saturation.",
+          "impact_estimate": "medium",
+          "effort": "low",
+          "priority": 55
+        }
+      ],
+      "evidence": [
+        "Geo holdout test n=4 regions, 6-week read."
+      ],
+      "confidence": 0.68,
+      "raw_notes": null
+    },
+    {
+      "schema_version": 1,
+      "agent_id": null,
+      "source_role": "funnel",
+      "period": "2026-Q1",
+      "as_of": null,
+      "headline": "Checkout step shows the largest drop-off; mobile landing LCP regressed on two key templates.",
+      "metrics": [
+        {
+          "name": "Checkout completion rate",
+          "value": 41,
+          "unit": "%",
+          "delta": -2.1,
+          "benchmark": null
+        },
+        {
+          "name": "Mobile LCP (p75)",
+          "value": 3.8,
+          "unit": "s",
+          "delta": 0.4,
+          "benchmark": null
+        }
+      ],
+      "recommendations": [
+        {
+          "title": "Simplify checkout step validation on mobile",
+          "rationale": "62% of exits occur on payment details with validation errors disproportionately on mobile Safari.",
+          "impact_estimate": "high",
+          "effort": "medium",
+          "priority": 78
+        }
+      ],
+      "evidence": [
+        "Funnel visualization: step 3 \u2192 4 largest relative loss."
+      ],
+      "confidence": 0.71,
+      "raw_notes": null
+    },
+    {
+      "schema_version": 1,
+      "agent_id": null,
+      "source_role": "paid_search",
+      "period": "2026-Q1",
+      "as_of": "2026-03-28",
+      "headline": "Search captures high-intent demand; impression share losses on core brand terms need budget or bid attention.",
+      "metrics": [
+        {
+          "name": "Spend",
+          "value": 74200,
+          "unit": "USD",
+          "delta": 0.02,
+          "benchmark": null
+        },
+        {
+          "name": "Impression share (brand core)",
+          "value": 72,
+          "unit": "%",
+          "delta": -5,
+          "benchmark": null
+        }
+      ],
+      "recommendations": [
+        {
+          "title": "Defend core brand terms before competitor conquest ramps",
+          "rationale": "IS dropped 5pts while CPC on generics rose; brand terms still highest ROAS.",
+          "impact_estimate": "high",
+          "effort": "low",
+          "priority": 85
+        },
+        {
+          "title": "refresh top-fatigued creatives in retargeting",
+          "rationale": "Duplicate hygiene check: different channel but same theme as social \u2014 merge test.",
+          "impact_estimate": "low",
+          "effort": "high",
+          "priority": 20
+        }
+      ],
+      "evidence": [
+        "Search query report: +18% brand term volume WoW."
+      ],
+      "confidence": 0.77,
+      "raw_notes": null
+    },
+    {
+      "schema_version": 1,
+      "agent_id": "agent-ps-1",
+      "source_role": "paid_social",
+      "period": "2026-Q1",
+      "as_of": "2026-03-28",
+      "headline": "Social spend is efficient on prospecting but retargeting CPMs are creeping up week over week.",
+      "metrics": [
+        {
+          "name": "Spend",
+          "value": 128400,
+          "unit": "USD",
+          "delta": 0.06,
+          "benchmark": null
+        },
+        {
+          "name": "Blended CTR",
+          "value": 1.12,
+          "unit": "%",
+          "delta": -0.08,
+          "benchmark": "1.2% target"
+        }
+      ],
+      "recommendations": [
+        {
+          "title": "Refresh top-fatigued creatives in retargeting",
+          "rationale": "Three static assets account for 45% of impressions and show a 19% drop in CTR vs account average.",
+          "impact_estimate": "high",
+          "effort": "medium",
+          "priority": 80
+        },
+        {
+          "title": "Re-allocate 10% budget to best-performing prospecting ad sets",
+          "rationale": "Two ad sets beat CPA target by 14% with room to scale.",
+          "impact_estimate": "medium",
+          "effort": "low",
+          "priority": 65
+        }
+      ],
+      "evidence": [
+        "Retargeting CPM +11% WoW while prospecting CPM flat.",
+        "Creative report: top 3 assets 42 days old."
+      ],
+      "confidence": 0.82,
+      "raw_notes": "Assume last-click attribution in mock data; incrementality not modeled."
+    }
+  ],
+  "merged_recommendations": [
+    {
+      "title": "Defend core brand terms before competitor conquest ramps",
+      "rationale": "IS dropped 5pts while CPC on generics rose; brand terms still highest ROAS.",
+      "sources": [
+        "paid_search"
+      ],
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 85,
+      "see_also": [],
+      "source_confidence": 0.77
+    },
+    {
+      "title": "refresh top-fatigued creatives in retargeting",
+      "rationale": "Duplicate hygiene check: different channel but same theme as social \u2014 merge test.\n\n_(Also noted by **paid_social**):_ Three static assets account for 45% of impressions and show a 19% drop in CTR vs account average.",
+      "sources": [
+        "paid_search",
+        "paid_social"
+      ],
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 80,
+      "see_also": [
+        "Refresh top-fatigued creatives in retargeting"
+      ],
+      "source_confidence": 0.82
+    },
+    {
+      "title": "Simplify checkout step validation on mobile",
+      "rationale": "62% of exits occur on payment details with validation errors disproportionately on mobile Safari.",
+      "sources": [
+        "funnel"
+      ],
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 78,
+      "see_also": [],
+      "source_confidence": 0.71
+    },
+    {
+      "title": "Re-allocate 10% budget to best-performing prospecting ad sets",
+      "rationale": "Two ad sets beat CPA target by 14% with room to scale.",
+      "sources": [
+        "paid_social"
+      ],
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 65,
+      "see_also": [],
+      "source_confidence": 0.82
+    },
+    {
+      "title": "Scale concept B into always-on with guardrails",
+      "rationale": "Lift significant in two geos; watch frequency caps to avoid saturation.",
+      "sources": [
+        "creative"
+      ],
+      "impact_estimate": "medium",
+      "effort": "low",
+      "priority": 55,
+      "see_also": [],
+      "source_confidence": 0.68
+    }
+  ],
+  "metric_rollup": [
+    {
+      "name": "Blended CTR",
+      "unit": "%",
+      "by_role": {
+        "paid_social": 1.12
+      },
+      "delta_by_role": {
+        "paid_social": -0.08
+      }
+    },
+    {
+      "name": "Checkout completion rate",
+      "unit": "%",
+      "by_role": {
+        "funnel": 41
+      },
+      "delta_by_role": {
+        "funnel": -2.1
+      }
+    },
+    {
+      "name": "Impression share (brand core)",
+      "unit": "%",
+      "by_role": {
+        "paid_search": 72
+      },
+      "delta_by_role": {
+        "paid_search": -5
+      }
+    },
+    {
+      "name": "Lift in consideration (test vs holdout)",
+      "unit": "pts",
+      "by_role": {
+        "creative": 9
+      },
+      "delta_by_role": {}
+    },
+    {
+      "name": "Mobile LCP (p75)",
+      "unit": "s",
+      "by_role": {
+        "funnel": 3.8
+      },
+      "delta_by_role": {
+        "funnel": 0.4
+      }
+    },
+    {
+      "name": "Spend",
+      "unit": "USD",
+      "by_role": {
+        "paid_search": 74200,
+        "paid_social": 128400
+      },
+      "delta_by_role": {
+        "paid_search": 0.02,
+        "paid_social": 0.06
+      }
+    }
+  ],
+  "executive_bullets": [
+    "**creative**: Concept B wins on consideration metrics; long-run hero assets need a rotation schedule.",
+    "**funnel**: Checkout step shows the largest drop-off; mobile landing LCP regressed on two key templates.",
+    "**paid_search**: Search captures high-intent demand; impression share losses on core brand terms need budget or bid attention.",
+    "**paid_social**: Social spend is efficient on prospecting but retargeting CPMs are creeping up week over week."
+  ]
+}

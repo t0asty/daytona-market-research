@@ -1,0 +1,15 @@
+## Part 2 — Snapshot numbers
+
+One row per metric and source (same data as Part 4, compressed for a quick scan).
+
+{% if merged.metric_rollup %}
+| Metric | Source | Value | Δ |
+|--------|--------|-------|---|
+{% for row in merged.metric_rollup %}
+{% for role, val in row.by_role.items() %}
+| {{ row.name }}{% if row.unit %} ({{ row.unit }}){% endif %} | {{ role | humanize_role }} | {{ val }} | {{ row.delta_by_role.get(role, "—") }} |
+{% endfor %}
+{% endfor %}
+{% else %}
+_No cross-channel metrics were rolled up._
+{% endif %}

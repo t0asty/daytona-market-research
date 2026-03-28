@@ -1,0 +1,25 @@
+## Part 1 — What to know first
+
+### Summary for a non-specialist
+
+{% if executive_summary_md %}
+{{ executive_summary_md }}
+{% else %}
+{% for line in merged.executive_bullets %}
+- {{ line | executive_bullet_humanize }}
+{% endfor %}
+{% endif %}
+
+### Highest-priority actions
+
+These rows mirror the merged priority order; use them as the short “what we should do” list before you read the longer rationale in Part 3.
+
+{% if merged.merged_recommendations %}
+| # | Action | Why (from analysts) | Impact | Effort | Pri. |
+|---|--------|---------------------|--------|--------|------|
+{% for r in merged.merged_recommendations[:8] %}
+| {{ loop.index }} | **{{ r.title }}** | {{ r.rationale | truncate(240, True, "…") }} | {{ r.impact_estimate or "—" }} | {{ r.effort or "—" }} | {{ r.priority if r.priority is not none else "—" }} |
+{% endfor %}
+{% else %}
+_No prioritized recommendations were merged._
+{% endif %}

@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Prose tweaks for dark report panel */
+.report-prose {
+  @apply prose prose-invert max-w-none;
+  --tw-prose-body: theme("colors.slate.300");
+  --tw-prose-headings: theme("colors.white");
+  --tw-prose-bold: theme("colors.white");
+  --tw-prose-quotes: theme("colors.slate.400");
+  --tw-prose-quote-borders: theme("colors.indigo.500");
+  --tw-prose-links: theme("colors.indigo.400");
+  --tw-prose-th-borders: theme("colors.slate.600");
+  --tw-prose-td-borders: theme("colors.slate.700");
+}
+
+.report-prose h1 {
+  @apply font-display text-3xl font-semibold tracking-tight text-white border-0 pb-0 mb-6;
+}
+
+.report-prose h2 {
+  @apply font-display text-xl font-semibold mt-10 mb-3 text-indigo-200 border-b border-white/10 pb-2;
+}
+
+.report-prose h3 {
+  @apply font-display text-lg font-medium mt-6 text-white/95;
+}
+
+.report-prose table {
+  @apply text-sm;
+}
+
+.report-prose th {
+  @apply bg-white/5 text-slate-200 font-medium;
+}
+
+.report-prose tr:nth-child(even) td {
+  @apply bg-white/[0.02];
+}
+
+.report-prose details {
+  @apply rounded-lg border border-white/10 bg-white/5 px-4 py-2 my-4;
+}
+
+.report-prose summary {
+  @apply cursor-pointer font-medium text-slate-200;
+}
