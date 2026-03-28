@@ -255,3 +255,46 @@ pytest
 # Optional live YouTube smoke (network + Chromium):
 RUN_YOUTUBE_INTEGRATION=1 pytest tests/test_social_worker.py -m integration
 ```
+## Daytona-powered SEO research (live agent mode)
+
+When `DAYTONA_API_KEY` is set, the "Run analyst agents" button spawns **real Daytona Cloud sandboxes** instead of reading static fixtures. Each sandbox executes an SEO research script and produces an `AgentFinding` JSON.
+
+### Setup
+
+```bash
+pip install -e ".[web,daytona]"
+cp .env.example .env
+# Edit .env: set DAYTONA_API_KEY, SEO_DEFAULT_DOMAIN, SEO_DEFAULT_KEYWORDS
+
+# Create the SEO snapshot (one-time)
+python -m report_gen.daytona_snapshot
+
+# Start the UI
+serve-report-ui
+```
+
+### Pipeline stages
+
+| # | Stage | What it does | Runs in |
+|---|-------|-------------|---------|
+| 1 | `keyword_research` | Google Suggest scraping, intent clustering | Sequential |
+| 2 | `serp_analysis` | SERP fetching, position/feature detection | Sequential |
+| 3 | `competitor_analysis` | Competitor page structure, content gaps | Parallel |
+| 4 | `content_audit` | Sitemap crawl, on-page SEO checks | Parallel |
+| 5 | `technical_seo` | 7 technical health checks | Parallel |
+| 6 | `assessment` | Cross-agent compilation, executive summary | Sequential |
+
+### How it works
+
+```
+Click "Run analyst agents"
+    → server.py detects DAYTONA_API_KEY
+    → daytona_runner.py spawns sandboxes for each stage
+    → Each sandbox runs an seo_agents/*.py script
+    → Findings written to FINDINGS_FIXTURES_DIR as *.finding.json
+    → SSE events stream to React frontend (same format as fixture mode)
+    → merge_findings() + render_report() produce the markdown
+    → Frontend renders the report
+```
+
+Without `DAYTONA_API_KEY`, the UI falls back to the original fixture-based simulation. The SEO fixture examples (`examples/fixtures/keyword_research.finding.json`, etc.) demonstrate the output format.

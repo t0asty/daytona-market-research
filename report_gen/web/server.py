@@ -76,6 +76,36 @@ def _finish_run(*, success: bool, error: str | None = None) -> None:
             st.ready = False
 
 
+async def _sse_daytona_run() -> AsyncIterator[bytes]:
+    """Real Daytona sandbox execution — used when DAYTONA_API_KEY is set."""
+    from report_gen.daytona_runner import run_daytona_agents
+
+    st = state_mod.state
+    fixtures_dir = resolve_fixtures_dir()
+
+    try:
+        async for event in run_daytona_agents(fixtures_dir):
+            if event.get("type") == "report_ready":
+                # Run the merge/render pipeline on the newly written findings
+                try:
+                    paths = sorted(fixtures_dir.glob("*.json"))
+                    md = await asyncio.to_thread(_run_pipeline, paths)
+                    with st.lock:
+                        st.markdown = md
+                        st.ready = True
+                        st.running = False
+                        st.error = None
+                except Exception as e:
+                    _finish_run(success=False, error=str(e))
+                    yield _sse({"type": "error", "message": str(e)})
+                    return
+            yield _sse(event)
+    except Exception as e:
+        _finish_run(success=False, error=str(e))
+        yield _sse({"type": "error", "message": str(e)})
+
+
+# Keep original name as alias for fixture mode
 async def _sse_agent_run() -> AsyncIterator[bytes]:
     st = state_mod.state
     try:
@@ -124,7 +154,10 @@ def _sse(obj: dict) -> bytes:
 
 @app.get("/api/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    from report_gen.daytona_runner import is_daytona_available
+
+    mode = "daytona" if is_daytona_available() else "fixtures"
+    return {"status": "ok", "agent_mode": mode}
 
 
 @app.get("/api/fixtures")
@@ -173,8 +206,12 @@ async def run_stream() -> StreamingResponse:
     if not _try_claim_run():
         raise HTTPException(status_code=409, detail="A run is already in progress.")
 
+    # Dispatch: real Daytona sandboxes if API key is set, fixture simulation otherwise
+    use_daytona = bool(os.environ.get("DAYTONA_API_KEY"))
+    runner = _sse_daytona_run() if use_daytona else _sse_agent_run()
+
     return StreamingResponse(
-        _sse_agent_run(),
+        runner,
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
