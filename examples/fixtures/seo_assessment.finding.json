@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "source_role": "seo_assessment",
+  "period": "2026-Q1",
+  "as_of": "2026-03-28",
+  "headline": "SEO assessment: 4 agents completed; 8 recommendations; 4 high-impact quick wins identified.",
+  "metrics": [
+    { "name": "Agents completed", "value": 4 },
+    { "name": "Total recommendations", "value": 8 },
+    { "name": "High-impact recommendations", "value": 4 },
+    { "name": "Unique recommendations (after merge)", "value": 7 }
+  ],
+  "recommendations": [
+    {
+      "title": "Push 5 keywords from page 1 bottom to top 3",
+      "rationale": "Cross-validated by SERP analysis: currently rank 4-10 on high-value terms. Content refresh + internal linking estimated at +40% CTR. Quick win with highest ROI.",
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 90
+    },
+    {
+      "title": "Target 'best seo tools' keyword cluster (12 keywords)",
+      "rationale": "Identified by keyword research as highest-volume cluster. SERP analysis confirms low competition for 8 of 12 terms. Create comprehensive comparison content.",
+      "impact_estimate": "high",
+      "effort": "medium",
+      "priority": 85
+    },
+    {
+      "title": "Add Organization and WebSite schema markup",
+      "rationale": "Technical SEO audit found zero structured data. All analyzed competitors use Organization schema. Low effort, enables rich results.",
+      "impact_estimate": "high",
+      "effort": "low",
+      "priority": 78
+    }
+  ],
+  "evidence": [
+    "**keyword_research**: Discovered 42 keywords in 8 clusters for the target domain.",
+    "**serp_analysis**: 5 easy-win positions identified, 8 featured snippet opportunities.",
+    "**content_audit**: 9 of 15 pages have SEO issues — primarily thin content and missing metadata.",
+    "**technical_seo**: Score 71% — structured data and canonical tags are the gaps."
+  ],
+  "confidence": 0.74,
+  "raw_notes": "## Priority Actions\n1. Push existing rank 4-10 keywords to top 3 (low effort, high impact)\n2. Create comparison content for 'best seo tools' cluster\n3. Add schema markup to all key pages\n4. Fix missing meta descriptions (6 pages)\n5. Add canonical tags to prevent duplicate content"
+}
