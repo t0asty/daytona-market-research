@@ -64,7 +64,7 @@ def main() -> None:
     parser.add_argument(
         "--llm",
         action="store_true",
-        help="Polish executive summary via OpenAI (requires OPENAI_API_KEY and pip install '.[llm]').",
+        help="Polish Part 1 summary for non-experts via OpenAI (requires OPENAI_API_KEY and pip install '.[llm]').",
     )
     parser.add_argument(
         "--llm-model",

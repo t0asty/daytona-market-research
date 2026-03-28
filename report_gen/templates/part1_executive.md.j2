@@ -18,7 +18,7 @@ These rows mirror the merged priority order; use them as the short “what we sh
 | # | Action | Why (from analysts) | Impact | Effort | Pri. |
 |---|--------|---------------------|--------|--------|------|
 {% for r in merged.merged_recommendations[:8] %}
-| {{ loop.index }} | **{{ r.title }}** | {{ r.rationale | truncate(240, True, "…") }} | {{ r.impact_estimate or "—" }} | {{ r.effort or "—" }} | {{ r.priority if r.priority is not none else "—" }} |
+| {{ loop.index }} | **{{ r.title }}** | {{ r.rationale | oneline }} | {{ r.impact_estimate or "—" }} | {{ r.effort or "—" }} | {{ r.priority if r.priority is not none else "—" }} |
 {% endfor %}
 {% else %}
 _No prioritized recommendations were merged._

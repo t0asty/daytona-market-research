@@ -17,6 +17,14 @@ def humanize_role(role: str) -> str:
     return str(role).replace("_", " ").replace("-", " ").strip().title()
 
 
+def oneline(s: str, *, max_len: int = 240) -> str:
+    """Collapse whitespace for single-line table cells (Markdown tables break on raw newlines)."""
+    one = " ".join(str(s).split())
+    if len(one) <= max_len:
+        return one
+    return one[: max_len - 1].rstrip() + "…"
+
+
 def executive_bullet_humanize(line: str) -> str:
     """
     Format `**source_role**: headline` with a humanized role label.
@@ -47,6 +55,7 @@ def render_report(
     )
     env.filters["humanize_role"] = humanize_role
     env.filters["executive_bullet_humanize"] = executive_bullet_humanize
+    env.filters["oneline"] = oneline
     tpl = env.get_template("report.md.j2")
     return tpl.render(
         merged=merged,

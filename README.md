@@ -35,7 +35,7 @@ pip install -e .
 report-gen --inputs "examples/fixtures/*.json" --out report.md --merged-json merged.json
 ```
 
-Optional LLM polish for the executive summary (requires API key and the `openai` extra):
+Optional LLM polish for the Part 1 opening summary (non-expert audience; requires API key and the `openai` extra):
 
 ```bash
 pip install -e ".[llm]"
